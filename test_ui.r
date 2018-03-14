@@ -7,8 +7,17 @@ ui <- shinyUI(
     
     tags$script(
       '$(document).ready(function() {
+
+        function getLocation(callBack){
+          var options = {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+          };
+        
         navigator.geolocation.getCurrentPosition(onSuccess,onError);
       
+
         function onError (err) {
           Shiny.onInputChange("geolocation", false);
         }
@@ -16,12 +25,38 @@ ui <- shinyUI(
         function onSuccess (position) {
           setTimeout(function () {
             var coords = position.coords;
-            console.log(coords.latitude + ", " + coords.longitude);
+            var timestamp = new Date();
+
+            console.log(coords.latitude + ", " + coords.longitude + "," + coords.accuracy);
             Shiny.onInputChange("geolocation", true);
             Shiny.onInputChange("lat", coords.latitude);
             Shiny.onInputChange("lon", coords.longitude);
+            Shiny.onInputChange("accuracy", coords.accuracy);
+            Shiny.onInputChange("time", timestamp)
+
+            console.log(timestamp);
+
+            if(callback){
+              callback();
+            }
           },1100)
         }
+      }
+          var TIMEOUT = 1000;
+          var started = false;
+          
+          function getLocationRepeat(){
+            if (!started) {
+              started = true;
+              getLocation(getLocationRepeat);
+              return;
+            }
+            setTimeout(function(){
+
+              getLocation(getLocationReepeat);
+            }, TIMEOUT);
+          };
+          getLocationRepeat();
       });
       '
     ),
@@ -32,27 +67,10 @@ ui <- shinyUI(
         width = 2,
         verbatimTextOutput("lat"),
         verbatimTextOutput("lon"),
-        verbatimTextOutput("geolocation")
+        verbatimTextOutput("geolocation"),
+        verbatimTextOutput("accuracy"),
+        verbatimTextOutput("time")
       )
     )
   )
 )
-
-server <- shinyServer(
-  function(input, output) {
-    
-    output$lat <- renderPrint({
-      input$lat
-    })
-    
-    output$lon <- renderPrint({
-      input$lon
-    })
-    
-    output$geolocation <- renderPrint({
-      input$geolocation
-    })
-  }
-)
-
-shinyApp(ui = ui, server = server)
