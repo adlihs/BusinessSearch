@@ -28,7 +28,7 @@ shinyUI(
       var coords = position.coords;
       var timestamp = new Date();
       
-      console.log(coords.latitude + ", " + coords.longitude + "," + coords.accuracy);
+      console.log(coords.latitude + ", " + coords.longitude, "," + coords.accuracy);
       Shiny.onInputChange("geolocation", true);
       Shiny.onInputChange("lat", coords.latitude);
       Shiny.onInputChange("lon", coords.longitude);
@@ -54,7 +54,7 @@ shinyUI(
       }
       setTimeout(function(){
       
-      getLocation(getLocationReepeat);
+      getLocation(getLocationRepeat);
       }, TIMEOUT);
       };
       getLocationRepeat();
