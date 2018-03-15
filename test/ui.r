@@ -28,7 +28,7 @@ shinyUI(fluidPage(
               console.log(coords.latitude + ", " + coords.longitude, "," + coords.accuracy);
               Shiny.onInputChange("geolocation", true);
               Shiny.onInputChange("lat", coords.latitude);
-              Shiny.onInputChange("long", coords.longitude);
+              Shiny.onInputChange("lon", coords.longitude);
               Shiny.onInputChange("accuracy", coords.accuracy);
               Shiny.onInputChange("time", timestamp)
               
@@ -65,7 +65,7 @@ shinyUI(fluidPage(
   # Show a plot of the generated distribution
   fluidRow(column(width = 5,
                   verbatimTextOutput("lat"),
-                  verbatimTextOutput("long"),
+                  verbatimTextOutput("lon"),
                   verbatimTextOutput("geolocation"),
                   verbatimTextOutput("accuracy"),
                   verbatimTextOutput("time"))
